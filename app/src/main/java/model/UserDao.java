@@ -1,4 +1,4 @@
-package com.codebears.sqllite;
+package model;
 
 import androidx.room.Dao;
 import androidx.room.Insert;

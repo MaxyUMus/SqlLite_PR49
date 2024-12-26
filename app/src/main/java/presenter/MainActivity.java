@@ -1,4 +1,4 @@
-package com.codebears.sqllite;
+package presenter;
 
 import android.os.Bundle;
 import android.view.View;
@@ -12,10 +12,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.codebears.sqllite.R;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class MainActivity extends AppCompatActivity {
+import model.AppDatabase;
+import model.User;
+import view.MainView;
+
+public class MainActivity extends AppCompatActivity implements MainView {
 
     private AppDatabase db;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -61,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         String password = editTextPassword.getText().toString();
 
         if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            DisplayResult("Please fill all fields");
             return;
         }
 
@@ -73,12 +79,12 @@ public class MainActivity extends AppCompatActivity {
                 User user = new User(name, email, password);
                 db.userDao().insert(user);
                 runOnUiThread(() -> {
-                    Toast.makeText(this, "User registered successfully", Toast.LENGTH_SHORT).show();
+                    DisplayResult("User registered successfully");
                 });
             } else {
                 // Пользователь с таким email уже существует
                 runOnUiThread(() -> {
-                    Toast.makeText(this, "User already exists", Toast.LENGTH_SHORT).show();
+                    DisplayResult( "User already exists");
                 });
             }
         });
@@ -92,11 +98,16 @@ public class MainActivity extends AppCompatActivity {
             User user = db.userDao().login(email, password);
             if (user != null) {
                 runOnUiThread(() -> {
-                    Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
+                    DisplayResult("Login successfully!");
                 });
             } else {
-                runOnUiThread(() -> Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> DisplayResult("Invalid email or password"));
             }
         }).start();
+    }
+
+    @Override
+    public void DisplayResult(String result) {
+        Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
     }
 }

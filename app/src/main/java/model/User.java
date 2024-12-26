@@ -1,4 +1,4 @@
-package com.codebears.sqllite;
+package model;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
